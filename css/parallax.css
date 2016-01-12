@@ -1,0 +1,22 @@
+.wrap {
+  background: #fff url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/182916/NH1nLsV.png) repeat 0 0;
+  background-size: 500px;
+  color: #fff;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 600;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  text-align: center;
+  text-shadow: 5px 5px black;
+  top: 0;
+  width: 100%;
+}
+
+h2 {
+  font-size: 4.5em;
+}
+
+h4 {
+  font-size: 3em;
+}
