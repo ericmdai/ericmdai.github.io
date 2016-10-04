@@ -1,133 +1,219 @@
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+'use strict';
+// 'To actually be able to display anything with Three.js, we need three things:
+// A scene, a camera, and a renderer so we can render the scene with the camera.'
+// - http://threejs.org/docs/#Manual/Introduction/Creating_a_scene
 
-var container, stats;
+var scene, camera, renderer;
 
-var camera, controls, scene, renderer;
-
-var cross;
+// I guess we need this stuff too
+var container, HEIGHT,
+  WIDTH, fieldOfView, aspectRatio,
+  nearPlane, farPlane, // stats,
+  geometry, particleCount,
+  i, h, color, size,
+  materials = [],
+  mouseX = 0,
+  mouseY = 0,
+  windowHalfX, windowHalfY, cameraZ,
+  fogHex, fogDensity, parameters = {},
+  parameterCount, particles;
 
 init();
 animate();
 
 function init() {
 
-  // camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-  camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 15 );
-  camera.position.z = 2;
+  HEIGHT = window.innerHeight;
+  WIDTH = window.innerWidth;
+  windowHalfX = WIDTH / 2;
+  windowHalfY = HEIGHT / 2;
 
-  // world
+  fieldOfView = 75;
+  aspectRatio = WIDTH / HEIGHT;
+  nearPlane = 1;
+  farPlane = 3000;
+
+  /*  fieldOfView — Camera frustum vertical field of view.
+aspectRatio — Camera frustum aspect ratio.
+nearPlane — Camera frustum near plane.
+farPlane — Camera frustum far plane.
+
+- http://threejs.org/docs/#Reference/Cameras/PerspectiveCamera
+
+In geometry, a frustum (plural: frusta or frustums)
+is the portion of a solid (normally a cone or pyramid)
+that lies between two parallel planes cutting it. - wikipedia.      */
+
+  cameraZ = farPlane / 3; /*  So, 1000? Yes! move on! */
+  fogHex = 0x000000; /* As black as your heart.   */
+  fogDensity = 0.0007; /* So not terribly dense?  */
+
+  camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
+  camera.position.z = cameraZ;
 
   scene = new THREE.Scene();
-  // scene.fog = new THREE.Fog( 0x72645b, 2, 15 );
-  scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+  scene.fog = new THREE.FogExp2(fogHex, fogDensity);
 
-  // PLY file
-  var loader = new THREE.PLYLoader();
-  loader.load( './models/dolphins.ply', function ( geometry ) {
-    geometry.computeVertexNormals();
-    var material = new THREE.MeshStandardMaterial( { color: 0x0055ff, shading: THREE.FlatShading } );
-    var mesh = new THREE.Mesh( geometry, material );
-    mesh.position.y = - 0.25;
-    mesh.rotation.x = - Math.PI / 2;
-    mesh.scale.multiplyScalar( 0.001 );
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    scene.add( mesh );
-  } );
+  container = document.createElement('div');
+  document.body.appendChild(container);
+  document.body.style.margin = 0;
+  document.body.style.overflow = 'hidden';
 
+  geometry = new THREE.Geometry(); /* NO ONE SAID ANYTHING ABOUT MATH! UGH!   */
 
-  // lights
-  scene.add( new THREE.HemisphereLight( 0x443333, 0x111122 ) );
-  addShadowedLight( 1, 1, 1, 0xffffff, 1.35 );
-  addShadowedLight( 0.5, 1, -1, 0xffaa00, 1 );
+  particleCount = 20000; /* Leagues under the sea */
 
-  // renderer
+  /*  Hope you took your motion sickness pills;
+We're about to get loopy.   */
 
-  renderer = new THREE.WebGLRenderer( { antialias: false } );
-  renderer.setClearColor( scene.fog.color );
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  for (i = 0; i < particleCount; i++) {
 
-  container = document.getElementById( 'container' );
-  container.appendChild( renderer.domElement );
+    var vertex = new THREE.Vector3();
+    vertex.x = Math.random() * 2000 - 1000;
+    vertex.y = Math.random() * 2000 - 1000;
+    vertex.z = Math.random() * 2000 - 1000;
 
-  stats = new Stats();
-  container.appendChild( stats.dom );
+    geometry.vertices.push(vertex);
+  }
 
-  controls = new THREE.TrackballControls( camera, renderer.domElement );
+  /*  We can't stop here, this is bat country!    */
 
-  controls.rotateSpeed = 10.0;
-  controls.zoomSpeed = 0.01;
-  controls.panSpeed = 0.8;
+  parameters = [
+    [
+      [1, 1, 0.5], 5
+    ],
+    [
+      [0.95, 1, 0.5], 4
+    ],
+    [
+      [0.90, 1, 0.5], 3
+    ],
+    [
+      [0.85, 1, 0.5], 2
+    ],
+    [
+      [0.80, 1, 0.5], 1
+    ]
+  ];
+  parameterCount = parameters.length;
 
-  controls.noZoom = false;
-  controls.noPan = true;
+  /*  I told you to take those motion sickness pills.
+Clean that vommit up, we're going again!    */
 
-  // controls.staticMoving = true;
-  // controls.dynamicDampingFactor = 0.3;
+  for (i = 0; i < parameterCount; i++) {
 
-  controls.keys = [ 65, 83, 68 ];
+    color = parameters[i][0];
+    size = parameters[i][1];
 
-  controls.addEventListener( 'change', render );
+    materials[i] = new THREE.PointCloudMaterial({
+      size: size
+    });
 
-  //
+    particles = new THREE.PointCloud(geometry, materials[i]);
 
-  window.addEventListener( 'resize', onWindowResize, false );
-  //
+    particles.rotation.x = Math.random() * 6;
+    particles.rotation.y = Math.random() * 6;
+    particles.rotation.z = Math.random() * 6;
 
-  render();
+    scene.add(particles);
+  }
 
-}
+  /*  If my calculations are correct, when this baby hits 88 miles per hour...
+you're gonna see some serious shit. */
 
-function addShadowedLight( x, y, z, color, intensity ) {
+  renderer = new THREE.WebGLRenderer(); /*    Rendererererers particles.  */
+  renderer.setPixelRatio(window.devicePixelRatio); /* Probably 1; unless you're fancy.    */
+  renderer.setSize(WIDTH, HEIGHT); /* Full screen baby Wooooo!    */
 
-  var directionalLight = new THREE.DirectionalLight( color, intensity );
-  directionalLight.position.set( x, y, z );
-  scene.add( directionalLight );
+  container.appendChild(renderer.domElement); /* Let's add all this crazy junk to the page.   */
 
-  directionalLight.castShadow = true;
+  /*  I don't know about you, but I like to know how bad my
+  code is wrecking the performance of a user's machine.
+  Let's see some damn stats!  */
 
-  var d = 1;
-  directionalLight.shadow.camera.left = -d;
-  directionalLight.shadow.camera.right = d;
-  directionalLight.shadow.camera.top = d;
-  directionalLight.shadow.camera.bottom = -d;
+  // stats = new Stats();
+  // stats.domElement.style.position = 'absolute';
+  // stats.domElement.style.top = '0px';
+  // stats.domElement.style.right = '0px';
+  // container.appendChild(stats.domElement);
 
-  directionalLight.shadow.camera.near = 1;
-  directionalLight.shadow.camera.far = 4;
+  /* Event Listeners */
 
-  directionalLight.shadow.mapSize.width = 1024;
-  directionalLight.shadow.mapSize.height = 1024;
-
-  directionalLight.shadow.bias = -0.005;
-
-}
-
-
-function onWindowResize() {
-
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize( window.innerWidth, window.innerHeight );
-
-  controls.handleResize();
-
-  render();
+  window.addEventListener('resize', onWindowResize, false);
+  document.addEventListener('mousemove', onDocumentMouseMove, false);
+  document.addEventListener('touchstart', onDocumentTouchStart, false);
+  document.addEventListener('touchmove', onDocumentTouchMove, false);
 
 }
 
 function animate() {
-
-  requestAnimationFrame( animate );
-  controls.update();
-
+  requestAnimationFrame(animate);
   render();
+  // stats.update();
 }
 
 function render() {
+  var time = Date.now() * 0.00005;
 
-  renderer.render( scene, camera );
-  stats.update();
+  camera.position.x += (-mouseX - camera.position.x) * 0.05;
+  camera.position.y += (mouseY - camera.position.y) * 0.05;
 
+  camera.lookAt(scene.position);
+
+  for (i = 0; i < scene.children.length; i++) {
+
+    var object = scene.children[i];
+
+    if (object instanceof THREE.PointCloud) {
+
+      object.rotation.y = time * (i < 4 ? i + 1 : -(i + 1));
+    }
+  }
+
+  for (i = 0; i < materials.length; i++) {
+
+    color = parameters[i][0];
+
+    h = (360 * (color[0] + time) % 360) / 360;
+    materials[i].color.setHSL(h, color[1], color[2]);
+  }
+
+  renderer.render(scene, camera);
+}
+
+function onDocumentMouseMove(e) {
+  mouseX = e.clientX - windowHalfX;
+  mouseY = e.clientY - windowHalfY;
+}
+
+/*  Mobile users?  I got your back homey    */
+
+function onDocumentTouchStart(e) {
+
+  if (e.touches.length === 1) {
+
+    e.preventDefault();
+    mouseX = e.touches[0].pageX - windowHalfX;
+    mouseY = e.touches[0].pageY - windowHalfY;
+  }
+}
+
+function onDocumentTouchMove(e) {
+
+  if (e.touches.length === 1) {
+
+    e.preventDefault();
+    mouseX = e.touches[0].pageX - windowHalfX;
+    mouseY = e.touches[0].pageY - windowHalfY;
+  }
+}
+
+function onWindowResize() {
+
+  windowHalfX = window.innerWidth / 2;
+  windowHalfY = window.innerHeight / 2;
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 }
