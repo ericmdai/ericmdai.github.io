@@ -81,50 +81,18 @@ function init() {
   controls.addEventListener( 'change', render );
 
   window.addEventListener( 'resize', onWindowResize, false );
-
-  render();
 }
-
-function addShadowedLight( x, y, z, color, intensity ) {
-
-  var directionalLight = new THREE.DirectionalLight( color, intensity );
-  directionalLight.position.set( x, y, z );
-  scene.add( directionalLight );
-
-  directionalLight.castShadow = true;
-
-  var d = 1;
-  directionalLight.shadow.camera.left = -d;
-  directionalLight.shadow.camera.right = d;
-  directionalLight.shadow.camera.top = d;
-  directionalLight.shadow.camera.bottom = -d;
-
-  directionalLight.shadow.camera.near = 1;
-  directionalLight.shadow.camera.far = 4;
-
-  directionalLight.shadow.mapSize.width = 1024;
-  directionalLight.shadow.mapSize.height = 1024;
-
-  directionalLight.shadow.bias = -0.005;
-
-}
-
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
   renderer.setSize( window.innerWidth, window.innerHeight );
-
-  controls.handleResize();
-
-  render();
 }
 
 function animate() {
   requestAnimationFrame( animate );
   controls.update();
-
   render();
 }
 
