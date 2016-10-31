@@ -65,7 +65,8 @@
 							<a class="thumbnail" href="images/fulls/02.jpg"><img src="images/thumbs/02.jpg" alt="" /></a>
 							<h2>Hivemapper Map Editor</h2>
 							<h4>Summer 2016</h4>
-							<p>Hivemapper internal tool.</p>
+							<p>Point cloud reconstructions using structure from motion can sometimes carry artifacts such as sky points or abnormal water structures. While these abnormalities are uncommon, they do occur from time to time and can only be caught by someone reviewing the finished reconstructions. Unfortunately, having to take each processed video and open the corresponding model in an external viewer can be a tedious tasks that wastes a lot of unecessary time.<br>
+							To solve this problem, I developed the Map Editor, a module in the reconstruction pipeline that sits between the final steps of video processing and the final push to production databases. As other modules finish, the Map Editor receives requests and queues the reconstructed models to be viewed. Once someone is available, they can start up an instance of the Map Editor and review all of the previously processed models. Additionally, since someone is already reviewing a reconstructed area, building polygons for that area are overlayed on top of the point cloud for shape and height verification. The Map Editor was written in C++ and OpenGL.</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/03.jpg" data-position="top center"><img src="images/thumbs/03.jpg" alt="" /></a>
