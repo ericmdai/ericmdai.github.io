@@ -57,53 +57,71 @@
 							<h2>Hivemapper Flight View</h2>
 							<h4>Fall 2016</h4>
 							<p>
-								<a href="https://hivemapper.com/flight-view" target="_blank">Flight View</a> is a new and unique way to view data captured from drones. Scrubbing through a large library of videos just to find a single shot or angle can be tedious and prone to human error. On the other hand, point cloud reconstructions don't necessarily provide the most accurate representations of the real world either. By merging both views, the ease of looking at a large area as a point cloud is combined with the ability to jump into and view any portion of the model through the video used to reconstruct it.<br>
-								My main contributions were in data loading and rendering. I developed the backend for managing requests for multi-resolution tiles stored using <a href="https://code.google.com/archive/p/s2-geometry-library/">S2</a> and updating the displayed point cloud. Rendering was done using custom-written shaders in THREE.js and WebGL.
+								<a href="https://hivemapper.com/flight-view" target="_blank">Flight View</a> is a new and unique way to view data captured from drones. Scrubbing through a large library of videos just to find a single shot or angle can be tedious and prone to human error. On the other hand, point cloud reconstructions don't necessarily provide the most accurate representations of the real world. By merging both views, the ease of looking at a large area as a point cloud is combined with the ability to jump into and view any portion of the model through the video used to reconstruct it.
+								<br>
+								My main contributions were in data loading and rendering of the Flight View. I developed the backend for managing requests for multi-resolution tiles stored using <a href="https://code.google.com/archive/p/s2-geometry-library/" target=_blank>S2</a> and updating the displayed point cloud. Rendering was done using custom-written shaders in <a href="https://threejs.org/" target=_blank>THREE.js</a> and WebGL.
 							</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/02.jpg"><img src="images/thumbs/02.jpg" alt="" /></a>
 							<h2>Hivemapper Map Editor</h2>
 							<h4>Summer 2016</h4>
-							<p>Point cloud reconstructions using structure from motion can sometimes carry artifacts such as sky points or abnormal water structures. While these abnormalities are uncommon, they do occur from time to time and can only be caught by someone reviewing the finished reconstructions. Unfortunately, having to take each processed video and open the corresponding model in an external viewer can be a tedious tasks that wastes a lot of unecessary time.<br>
-							To solve this problem, I developed the Map Editor, a module in the reconstruction pipeline that sits between the final steps of video processing and the final push to production databases. As other modules finish, the Map Editor receives requests and queues the reconstructed models to be viewed. Once someone is available, they can start up an instance of the Map Editor and review all of the previously processed models. Additionally, since someone is already reviewing a reconstructed area, building polygons for that area are overlayed on top of the point cloud for shape and height verification. The Map Editor was written in C++ and OpenGL.</p>
+							<p>
+								Point cloud reconstructions using structure from motion can sometimes carry artifacts such as sky points or abnormal water structures. While these abnormalities are uncommon, they do occur from time to time and can only be caught by someone reviewing the finished reconstructions. Unfortunately, having to take each processed video and open the corresponding model in an external viewer can be a tedious task that wastes a lot of unecessary time.
+								<br>
+								To solve this problem, I developed the Map Editor, a module in Hivemapper's reconstruction pipeline that sits between the last steps in video processing and the final push to production databases. As other modules finish, the Map Editor receives requests and queues the reconstructed models to be viewed. Once someone is available, they can start up an instance of the Map Editor and review all of the queued models in a custom point cloud viewer. Additionally, since someone is already reviewing a reconstructed area, building polygons for that area are overlayed on top of the point cloud for shape and height verification. The Map Editor was written in C++ and OpenGL.
+							</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/03.jpg" data-position="top center"><img src="images/thumbs/03.jpg" alt="" /></a>
 							<h2>CUAir Camera Gimbal</h2>
-							<h4>Spring 2016</h4>
-							<p>Hardware and software system for pointing onboard camera.</p>
+							<h4>Fall 2015 - Spring 2016</h4>
+							<p>
+								As a part of the <a href="https://cuair.org" target=_blank>Cornell University Unmanned Air Systems (CUAir)</a> engineering project team, I was responsible for stabilizing the camera mounted to the back of our UAV's fuselage. One of the most important tasks in the <a href="https://auvsi-suas.org" target=_blank>AUVSI SUAS Competition</a> is image tagging, identification, and geolocation of various targets placed around the competition field. To guarantee the capture of clear and undistorted images, I helped design and develop a two-axis gimbal stabilization system for our onboard camera.
+								<br>
+								Outside of the mechanical design of the gimbal frame, I was responsible for the entirety of the gimbal electrical and software systems. In terms of hardware, the gimbal consisted of two brushless motors and a <a href="https://www.basecamelectronics.com/simplebgc32bit/" target=_blank>SimpleBGC gimbal control board</a> mounted to a custom 3D printed frame. The control board was connected to our onboard computer via a serial interface written using <a href="https://github.com/pyserial/pyserial" target=_blank>PySerial</a>. A <a href="http://flask.pocoo.org/" target=_blank>Flask</a> server running on the onboard computer would then processes requests from our software ground station and instruct the control board on what angles to point the camera. This onboard server was written in Python with a <a href="https://sqlite.org/" target=_blank>SQLite</a> database.
+							</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/04.jpg"><img src="images/thumbs/04.jpg" alt="" /></a>
 							<h2>CUAir Wi-Fi Communications and Antenna Tracker</h2>
 							<h4>Fall 2014 - Spring 2016</h4>
-							<p>Wireless communications system for handling long range data transfer between the ground station and aircraft.</p>
+							<p>
+								Wireless communications system for handling long range data transfer between the ground station and aircraft.
+							</p>
 						</article>
 						<!-- Separate Antenna Tracker and Comms? -->
 						<article>
 							<a class="thumbnail" href="images/fulls/05.jpg" data-position="top center"><img src="images/thumbs/05.jpg" alt="" /></a>
 							<h2>Panorama Stitcher</h2>
 							<h4>Spring 2016</h4>
-							<p>CS 4670 Computer Vision project using feature detection to stitch photos into seamless panoramas.</p>
+							<p>
+								CS 4670 Computer Vision project using feature detection to stitch photos into seamless panoramas.
+							</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/06.jpg"><img src="images/thumbs/06.jpg" alt="" /></a>
 							<h2>Rubik's Cube Simulator</h2>
 							<h4>Fall 2015</h4>
-							<p>CS 4620 Computer Graphics Practicum final project.</p>
+							<p>
+								CS 4620 Computer Graphics Practicum final project.
+							</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/07.jpg"><img src="images/thumbs/07.jpg" alt="" /></a>
 							<h2>Remote Polling System</h2>
 							<h4>Spring 2015</h4>
-							<p>CS 3420 Embedded Systems final project.</p>
+							<p>
+								CS 3420 Embedded Systems final project.
+							</p>
 						</article>
 						<article>
 							<a class="thumbnail" href="images/fulls/08.jpg"><img src="images/thumbs/08.jpg" alt="" /></a>
 							<h2>Functional Map Reduce</h2>
 							<h4>Spring 2015</h4>
-							<p>CS 3110 Data Structures and Functional Programming final project. </p>
+							<p>
+								CS 3110 Data Structures and Functional Programming final project.
+							</p>
 							<h6><a href="http://blog.sqlauthority.com/2013/10/09/big-data-buzz-words-what-is-mapreduce-day-7-of-21/" target="_blank">Image Source</a></h6>
 						</article>
 <!-- 						<article>
